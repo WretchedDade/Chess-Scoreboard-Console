@@ -8,4 +8,8 @@
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.36.1.1443" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

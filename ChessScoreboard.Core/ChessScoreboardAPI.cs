@@ -78,7 +78,7 @@ namespace ChessScoreboard.Core
 
                 bool wasStalemate = Convert.ToBoolean(row[3]);
 
-                yield return new Game(id, winner, loser, wasStalemate);
+                yield return new Game() { Id = id, Winner = winner, Loser = loser, WasAStalemate = wasStalemate };
             }
         }
 
@@ -103,13 +103,13 @@ namespace ChessScoreboard.Core
                 if (row.Count >= 6 && !string.IsNullOrWhiteSpace(row[5].ToString()))
                     rating = Convert.ToDouble(row[5]);
 
-                yield return new Player(id, rating, row[1].ToString());
+                yield return new Player { Id = id, Rating = rating, Name = row[1].ToString() };
             }
         }
 
         public void UpdateRatingsInSpreadsheet(List<Player> players)
         {
-            players = players.OrderBy(player => player.RankOnLoad).ToList();
+            players = players.OrderBy(player => player.Rank).ToList();
 
             var requestBody = new ValueRange
             {
@@ -123,7 +123,7 @@ namespace ChessScoreboard.Core
 
         public void UpdatePlayersInSpreadsheet(List<Player> players)
         {
-            players = players.OrderBy(player => player.RankOnLoad).ToList();
+            players = players.OrderBy(player => player.Rank).ToList();
 
             var requestBody = new ValueRange
             {

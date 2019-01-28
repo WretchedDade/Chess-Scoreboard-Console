@@ -1,20 +1,25 @@
-﻿namespace ChessScoreboard.Core.Models
+﻿using Newtonsoft.Json;
+
+namespace ChessScoreboard.Core.Models
 {
     public class Game
     {
-        public Game() { }
+        [JsonProperty("#")]
+        public int? Id { get; set; }
 
-        public Game(int id, Player winner, Player loser, bool wasStalement)
-        {
-            Id = id;
-            Winner = winner;
-            Loser = loser;
-            WasAStalemate = wasStalement;
-        }
+        [JsonProperty("Winner")]
+        public string WinnerName { get; set; }
 
-        public int Id { get; set; }
-        public Player Winner { get; set; }
-        public Player Loser { get; set; }
+        [JsonProperty("Loser")]
+        public string LoserName { get; set; }
+
+        [JsonProperty("Stalemate?")]
         public bool WasAStalemate { get; set; }
+
+        [JsonIgnore]
+        public Player Winner { get; set; }
+
+        [JsonIgnore]
+        public Player Loser { get; set; }
     }
 }
