@@ -47,7 +47,7 @@
             /// <summary>
             /// Range containing the list of games played
             /// </summary>
-            public static readonly string FullRange = $"{SheetName}!$B$1:$D${LastRow}";
+            public static readonly string FullRange = $"{SheetName}!$A$2:$D${LastRow}";
 
             /// <summary>
             /// Range containing the list of games played, excluding the column for player rank
@@ -86,7 +86,7 @@
             /// <summary>
             /// Range containing the list of players
             /// </summary>
-            public static readonly string FullRange = $"{SheetName}!$A$1:$F${LastRow}";
+            public static readonly string FullRange = $"{SheetName}!$A$2:$F${LastRow}";
 
             /// <summary>
             /// The column containing the players' rating

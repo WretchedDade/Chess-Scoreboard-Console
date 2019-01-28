@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using ChessScoreboard.Core;
-using ChessScoreboard.Core.Models;
 
 namespace ChessScoreboard.Desktop
 {
@@ -9,10 +6,8 @@ namespace ChessScoreboard.Desktop
     {
         static void Main(string[] args)
         {
-            var chessScoreboardData = new ChessScoreboardData();
-
-            //var chessScoreboardInterface = new ChessScoreboardInterface();
-            //chessScoreboardInterface.Start();
+            var chessScoreboardInterface = new ChessScoreboardInterface();
+            chessScoreboardInterface.Start();
         }
     }
 }

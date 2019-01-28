@@ -1,31 +1,20 @@
-﻿using Newtonsoft.Json;
-
-namespace ChessScoreboard.Core.Models
+﻿namespace ChessScoreboard.Core.Models
 {
     public class Player
     {
-        [JsonProperty("Rank")]
-        public int Id { get; set; }
+        public Player(int rankOnLoad, double rating, string name)
+        {
+            RankOnLoad = rankOnLoad;
+            CurrentRank = rankOnLoad;
+            Rating = rating;
+            Name = name;
+        }
 
-        [JsonProperty("Name")]
+        public int RankOnLoad { get; set; }
+        public int CurrentRank { get; set; }
+        public double Rating { get; set; }
         public string Name { get; set; }
 
-        [JsonProperty("Wins")]
-        public int Wins { get; set; }
-
-        [JsonProperty("Losses")]
-        public int Losses { get; set; }
-
-        [JsonProperty("Stalemates")]
-        public int Stalemates { get; set; }
-
-        [JsonProperty("Rating")]
-        public double Rating { get; set; }
-
-        [JsonIgnore]
-        public int Rank => Id;
-
-        [JsonIgnore]
         public string FirstName => Name.Substring(0, Name.IndexOf(' '));
     }
 }

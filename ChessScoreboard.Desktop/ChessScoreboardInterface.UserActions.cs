@@ -40,7 +40,7 @@ namespace ChessScoreboard.Desktop
             ConsoleUtility.WriteHyphenLine("Avaiable Players");
 
             foreach (Player player in Players)
-                ConsoleUtility.WriteLine($"{player.Rank}. {player.FirstName}");
+                ConsoleUtility.WriteLine($"{player.CurrentRank}. {player.FirstName}");
 
             ConsoleUtility.WriteHyphenLine();
 
@@ -68,8 +68,8 @@ namespace ChessScoreboard.Desktop
             }
 
             Player winner, loser;
-            winner = Players.FirstOrDefault(player => player.Rank == winnerNumber);
-            loser = Players.FirstOrDefault(player => player.Rank == loserNumber);
+            winner = Players.FirstOrDefault(player => player.CurrentRank == winnerNumber);
+            loser = Players.FirstOrDefault(player => player.CurrentRank == loserNumber);
 
             while (winner == null || loser == null)
             {
@@ -103,8 +103,8 @@ namespace ChessScoreboard.Desktop
                         loserNumber = ConsoleUtility.ReadInt();
                     }
 
-                    winner = Players.FirstOrDefault(player => player.Rank == winnerNumber);
-                    loser = Players.FirstOrDefault(player => player.Rank == loserNumber);
+                    winner = Players.FirstOrDefault(player => player.CurrentRank == winnerNumber);
+                    loser = Players.FirstOrDefault(player => player.CurrentRank == loserNumber);
                 }
                 else
                 {
@@ -145,7 +145,7 @@ namespace ChessScoreboard.Desktop
 
             string playerName = ConsoleUtility.ReadLine();
 
-            var player = new Player { Id = Players.Max(p => p.Rank) + 1, Rating = Constants.BaseRating, Name = playerName };
+            var player = new Player(Players.Max(p => p.CurrentRank) + 1, Constants.BaseRating, playerName);
             Players.Add(player);
 
             ChessScoreboardAPI.UpdatePlayersInSpreadsheet(Players);
@@ -286,8 +286,8 @@ namespace ChessScoreboard.Desktop
                 {
                     updatedRatings = ratingCalculator.GetNewRatings(game.WasAStalemate, game.Winner.Rating, game.Loser.Rating);
 
-                    Players.First(player => player.Rank == game.Winner.Rank).Rating = updatedRatings.WinnerUpdatedRating;
-                    Players.First(player => player.Rank == game.Loser.Rank).Rating = updatedRatings.LoserUpdatedRating;
+                    Players.First(player => player.RankOnLoad == game.Winner.RankOnLoad).Rating = updatedRatings.WinnerUpdatedRating;
+                    Players.First(player => player.RankOnLoad == game.Loser.RankOnLoad).Rating = updatedRatings.LoserUpdatedRating;
                 }
             }
             else
@@ -299,7 +299,7 @@ namespace ChessScoreboard.Desktop
             Players = Players.OrderByDescending(player => player.Rating).ThenBy(player => player.FirstName).ToList();
 
             for (int i = 0; i < Players.Count; i++)
-                Players[i].Id = i + 1;
+                Players[i].CurrentRank = i + 1;
         }
 
         private void ViewGames()
@@ -322,7 +322,7 @@ namespace ChessScoreboard.Desktop
             ConsoleUtility.WriteLineAsHeading("View Players");
 
             foreach (Player player in Players)
-                ConsoleUtility.WriteLine($"{player.Rank}. {player.FirstName} is ranked #{player.Rank} with an ELO rating of {player.Rating}");
+                ConsoleUtility.WriteLine($"{player.CurrentRank}. {player.FirstName} is ranked #{player.CurrentRank} with an ELO rating of {player.Rating}");
 
             ConsoleUtility.WriteHyphenLine();
         }
