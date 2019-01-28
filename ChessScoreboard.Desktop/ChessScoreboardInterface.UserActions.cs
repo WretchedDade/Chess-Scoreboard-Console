@@ -125,12 +125,12 @@ namespace ChessScoreboard.Desktop
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Updating collection of games in spreadsheet...");
-            ChessScoreboardAPI.UpdateGamesInSpreadsheet(Games);
+            //ChessScoreboardAPI.UpdateGamesInSpreadsheet(Games);
             ConsoleUtility.WriteLine("Complete");
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Updating collection of players in spreadsheet...");
-            ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
+            //ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
             ConsoleUtility.WriteLine("Complete");
 
             Clear();
@@ -148,7 +148,7 @@ namespace ChessScoreboard.Desktop
             var player = new Player { Id = Players.Max(p => p.Rank) + 1, Rating = Constants.BaseRating, Name = playerName };
             Players.Add(player);
 
-            ChessScoreboardAPI.UpdatePlayersInSpreadsheet(Players);
+            //ChessScoreboardAPI.UpdatePlayersInSpreadsheet(Players);
 
             Clear();
             ViewPlayers();
@@ -176,12 +176,12 @@ namespace ChessScoreboard.Desktop
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Updating collection of games in spreadsheet...");
-            ChessScoreboardAPI.UpdateGamesInSpreadsheet(Games);
+            //ChessScoreboardAPI.UpdateGamesInSpreadsheet(Games);
             ConsoleUtility.WriteLine("Complete");
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Updating collection of players in spreadsheet...");
-            ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
+            //ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
             ConsoleUtility.WriteLine("Complete");
 
             Clear();
@@ -264,7 +264,7 @@ namespace ChessScoreboard.Desktop
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Updating the Spreadsheet with the new Player Ratings...");
-            ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
+            //ChessScoreboardAPI.UpdateRatingsInSpreadsheet(Players);
 
             ConsoleUtility.WriteLine();
             ConsoleUtility.WriteLine("Update Complete");

@@ -4,9 +4,6 @@ namespace ChessScoreboard.Core.Models
 {
     public class Game
     {
-        [JsonProperty("#")]
-        public int? Id { get; set; }
-
         [JsonProperty("Winner")]
         public string WinnerName { get; set; }
 
@@ -15,6 +12,9 @@ namespace ChessScoreboard.Core.Models
 
         [JsonProperty("Stalemate?")]
         public bool WasAStalemate { get; set; }
+
+        [JsonIgnore]
+        public int? Id { get; set; }
 
         [JsonIgnore]
         public Player Winner { get; set; }

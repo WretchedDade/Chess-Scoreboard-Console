@@ -55,8 +55,8 @@ namespace ChessScoreboard.Desktop
 
         private void LoadData()
         {
-            Players = ChessScoreboardAPI.GetPlayers().ToList();
-            Games = ChessScoreboardAPI.GetGamesPlayed(Players).ToList();
+            //Players = ChessScoreboardAPI.GetPlayers().ToList();
+            //Games = ChessScoreboardAPI.GetGamesPlayed(Players).ToList();
         }
 
         private void ProcessActionInput(string input)

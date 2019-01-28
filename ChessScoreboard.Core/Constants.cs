@@ -1,4 +1,7 @@
-﻿namespace ChessScoreboard.Core
+﻿using System.Collections.Generic;
+using Google.Apis.Sheets.v4;
+
+namespace ChessScoreboard.Core
 {
     public static class Constants
     {
@@ -16,6 +19,8 @@
         /// Name of the DataStore to be creating on obtaining a user credential
         /// </summary>
         public static readonly string CredDataStoreLocation = "token.json";
+
+        public static readonly List<string> Scopes = new List<string> { SheetsService.Scope.Spreadsheets };
 
         /// <summary>
         /// The prod url to make a REST request to the the APP script behind the spreadsheet (Prod implies the most recent 'version' of the script)

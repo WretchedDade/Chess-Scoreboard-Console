@@ -16,153 +16,100 @@ namespace ChessScoreboard.Core
 {
     public class ChessScoreboardAPI
     {
-        /// <summary>
-        /// The service used to make calls to the Google Sheets API
-        /// </summary>
-        private SheetsService SheetsService;
+        //public IEnumerable<Game> GetGamesPlayed(List<Player> players)
+        //{
+        //    ValueRange response = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetId, Constants.Games.FullRange).Execute();
 
-        public ChessScoreboardAPI() => EstablishConnectionToSpreasheet();
+        //    foreach (IList<object> row in response.Values)
+        //    {
+        //        if (row.Count == 0 || string.IsNullOrWhiteSpace(row[0].ToString()) || string.IsNullOrWhiteSpace(row[1].ToString()) || string.IsNullOrWhiteSpace(row[2].ToString()))
+        //            break;
 
-        /// <summary>
-        /// Obtains a <see cref="UserCredential"/> and sets the <see cref="SheetsService"/> field
-        /// </summary>
-        private void EstablishConnectionToSpreasheet()
-        {
-            UserCredential userCredential;
+        //        int id = Convert.ToInt32(row[0]);
 
-            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                var dataStore = new FileDataStore(Constants.CredDataStoreLocation, true);
-                var scopes = new List<string>() { SheetsService.Scope.Spreadsheets };
-                ClientSecrets clientSecrets = GoogleClientSecrets.Load(stream).Secrets;
+        //        string winnerName = Convert.ToString(row[1]);
+        //        string loserName = Convert.ToString(row[2]);
 
-                userCredential = GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, scopes, "user", CancellationToken.None, dataStore).Result;
-            }
+        //        Player winner = players.FirstOrDefault(player => player.Name.Equals(winnerName, StringComparison.OrdinalIgnoreCase));
+        //        Player loser = players.FirstOrDefault(player => player.Name.Equals(loserName, StringComparison.OrdinalIgnoreCase));
 
-            var baseClientInitializer = new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = userCredential,
-                ApplicationName = Constants.AppName
-            };
+        //        bool wasStalemate = Convert.ToBoolean(row[3]);
 
-            SheetsService = new SheetsService(baseClientInitializer);
-        }
+        //        yield return new Game() { Id = id, Winner = winner, Loser = loser, WasAStalemate = wasStalemate };
+        //    }
+        //}
 
-        /// <summary>
-        /// Makes a call to the Google Sheets API pulling back the data from the Games sheet in the ChessScoreboard and turning it into Games
-        /// </summary>
-        /// <returns>All valid games in the ChessScoreboard</returns>
-        public IEnumerable<Game> GetGamesPlayed() => GetGamesPlayed(GetPlayers().ToList());
+        //public IEnumerable<Player> GetPlayers()
+        //{
+        //    GetRequest request = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetId, Constants.Players.FullRange);
 
-        /// <summary>
-        /// Makes a call to the Google Sheets API pulling back the data from the Games sheet in the ChessScoreboard and turning it into Games
-        /// </summary>
-        /// <param name="players">List of players to get games for</param>
-        /// <returns>All valid games belonging to any player in the passed list</returns>
-        public IEnumerable<Game> GetGamesPlayed(List<Player> players)
-        {
-            ValueRange response = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetId, Constants.Games.FullRange).Execute();
+        //    ValueRange response = request.Execute();
 
-            foreach (IList<object> row in response.Values)
-            {
-                if (row.Count == 0 || string.IsNullOrWhiteSpace(row[0].ToString()) || string.IsNullOrWhiteSpace(row[1].ToString()) || string.IsNullOrWhiteSpace(row[2].ToString()))
-                    break;
+        //    foreach (IList<object> row in response.Values)
+        //    {
+        //        if (string.IsNullOrWhiteSpace(row[0].ToString()) || string.IsNullOrWhiteSpace(row[1].ToString()))
+        //            break;
 
-                int id = Convert.ToInt32(row[0]);
+        //        int id = Convert.ToInt32(row[0]);
 
-                string winnerName = Convert.ToString(row[1]);
-                string loserName = Convert.ToString(row[2]);
+        //        double rating = Constants.BaseRating;
+        //        if (row.Count >= 6 && !string.IsNullOrWhiteSpace(row[5].ToString()))
+        //            rating = Convert.ToDouble(row[5]);
 
-                Player winner = players.FirstOrDefault(player => player.Name.Equals(winnerName, StringComparison.OrdinalIgnoreCase));
-                Player loser = players.FirstOrDefault(player => player.Name.Equals(loserName, StringComparison.OrdinalIgnoreCase));
+        //        yield return new Player { Id = id, Rating = rating, Name = row[1].ToString() };
+        //    }
+        //}
 
-                bool wasStalemate = Convert.ToBoolean(row[3]);
+        //public void UpdateRatingsInSpreadsheet(List<Player> players)
+        //{
+        //    players = players.OrderBy(player => player.Rank).ToList();
 
-                yield return new Game() { Id = id, Winner = winner, Loser = loser, WasAStalemate = wasStalemate };
-            }
-        }
+        //    var requestBody = new ValueRange
+        //    {
+        //        Values = players.Select(player => new List<object>() { player.Rating } as IList<object>).ToList()
+        //    };
 
-        /// <summary>
-        /// Makes a call to the Google Sheets API pulling back the data from the Players sheet in the ChessScoreboard and turning it into Players
-        /// </summary>
-        /// <returns>All available players on the ChessScoreboard</returns>
-        public IEnumerable<Player> GetPlayers()
-        {
-            GetRequest request = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetId, Constants.Players.FullRange);
+        //    string ratingsRange = $"{Constants.Players.SheetName}!{Constants.Players.RatingColumn}$2:{Constants.Players.RatingColumn}${players.Count + 1}";
 
-            ValueRange response = request.Execute();
+        //    UpdateSpreadsheet(requestBody, ratingsRange);
+        //}
 
-            foreach (IList<object> row in response.Values)
-            {
-                if (string.IsNullOrWhiteSpace(row[0].ToString()) || string.IsNullOrWhiteSpace(row[1].ToString()))
-                    break;
+        //public void UpdatePlayersInSpreadsheet(List<Player> players)
+        //{
+        //    players = players.OrderBy(player => player.Rank).ToList();
 
-                int id = Convert.ToInt32(row[0]);
+        //    var requestBody = new ValueRange
+        //    {
+        //        Values = players.Select(player => new List<object>() { player.Name } as IList<object>).ToList()
+        //    };
 
-                double rating = Constants.BaseRating;
-                if (row.Count >= 6 && !string.IsNullOrWhiteSpace(row[5].ToString()))
-                    rating = Convert.ToDouble(row[5]);
+        //    string namesRange = $"{Constants.Players.SheetName}!{Constants.Players.NameColumn}$2:{Constants.Players.NameColumn}${players.Count + 1}";
 
-                yield return new Player { Id = id, Rating = rating, Name = row[1].ToString() };
-            }
-        }
+        //    UpdateSpreadsheet(requestBody, namesRange);
 
-        public void UpdateRatingsInSpreadsheet(List<Player> players)
-        {
-            players = players.OrderBy(player => player.Rank).ToList();
+        //    UpdateRatingsInSpreadsheet(players);
+        //}
 
-            var requestBody = new ValueRange
-            {
-                Values = players.Select(player => new List<object>() { player.Rating } as IList<object>).ToList()
-            };
-
-            string ratingsRange = $"{Constants.Players.SheetName}!{Constants.Players.RatingColumn}$2:{Constants.Players.RatingColumn}${players.Count + 1}";
-
-            UpdateSpreadsheet(requestBody, ratingsRange);
-        }
-
-        public void UpdatePlayersInSpreadsheet(List<Player> players)
-        {
-            players = players.OrderBy(player => player.Rank).ToList();
-
-            var requestBody = new ValueRange
-            {
-                Values = players.Select(player => new List<object>() { player.Name } as IList<object>).ToList()
-            };
-
-            string namesRange = $"{Constants.Players.SheetName}!{Constants.Players.NameColumn}$2:{Constants.Players.NameColumn}${players.Count + 1}";
-
-            UpdateSpreadsheet(requestBody, namesRange);
-
-            UpdateRatingsInSpreadsheet(players);
-        }
-
-        public void UpdateGamesInSpreadsheet(List<Game> games)
-        {
-            string gamesRange = $"{Constants.Games.SheetName}!{Constants.Games.WinnerColumn}$2:{Constants.Games.StalemateColumn}$";
-            gamesRange = games.Any() ? $"{gamesRange}{games.Count + 1}" : $"{gamesRange}{Constants.Games.LastRow}";
+        //public void UpdateGamesInSpreadsheet(List<Game> games)
+        //{
+        //    string gamesRange = $"{Constants.Games.SheetName}!{Constants.Games.WinnerColumn}$2:{Constants.Games.StalemateColumn}$";
+        //    gamesRange = games.Any() ? $"{gamesRange}{games.Count + 1}" : $"{gamesRange}{Constants.Games.LastRow}";
 
 
-            var requestBody = new ValueRange { Values = new List<IList<object>> { new List<object> { "", "", "" } } };
-            requestBody = new ValueRange { Values = games.Select(game => new List<object> { game.Winner.Name, game.Loser.Name, game.WasAStalemate } as IList<object>).ToList() };
+        //    var requestBody = new ValueRange { Values = new List<IList<object>> { new List<object> { "", "", "" } } };
+        //    requestBody = new ValueRange { Values = games.Select(game => new List<object> { game.Winner.Name, game.Loser.Name, game.WasAStalemate } as IList<object>).ToList() };
 
-            UpdateSpreadsheet(requestBody, gamesRange);
-        }
+        //    UpdateSpreadsheet(requestBody, gamesRange);
+        //}
 
-        private void UpdateSpreadsheet(ValueRange valueRange, string range)
-        {
-            UpdateRequest request = SheetsService.Spreadsheets.Values.Update(valueRange, Constants.SpreadsheetId, range);
-            request.ValueInputOption = UpdateRequest.ValueInputOptionEnum.USERENTERED;
+        //private void UpdateSpreadsheet(ValueRange valueRange, string range)
+        //{
+        //    UpdateRequest request = SheetsService.Spreadsheets.Values.Update(valueRange, Constants.SpreadsheetId, range);
+        //    request.ValueInputOption = UpdateRequest.ValueInputOptionEnum.USERENTERED;
 
-            request.Execute();
+        //    request.Execute();
 
-            FormatSpreadsheet();
-        }
-
-        private async void FormatSpreadsheet()
-        {
-            using (var httpClient = new HttpClient())
-                await httpClient.GetAsync(Constants.AppScriptExecURL);
-        }
+        //    FormatSpreadsheet();
+        //}
     }
 }

@@ -8,8 +8,4 @@
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.37.0.1478" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GoogleSheets\GoogleSheets.csproj" />
-  </ItemGroup>
-
 </Project>
