@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -37,9 +38,24 @@ namespace GoogleSheets
             return JsonConvert.DeserializeObject<T>(json);
         }
 
-        public static IList<object> ToRow<T>(T data) where T : class
+        public static IEnumerable<T> FromRows<T>(IList<IList<object>> rows, string[] columnNames = null) where T : class
         {
-            var dict = ((dynamic)data) as IDictionary<string, object>;
+            int startingIndex = 0;
+
+            if (columnNames == null)
+            {
+                columnNames = rows[0].Select(x => x.ToString()).ToArray();
+                startingIndex = 1;
+            }
+
+            for (int index = startingIndex; index < rows.Count; index++)
+                yield return FromRow<T>(rows[index], columnNames);
+        }
+
+        public static IList<object> ToRow<T>(T obj) where T : class
+        {
+            // Reflection code taken from https://stackoverflow.com/questions/4943817/mapping-object-to-dictionary-and-vice-versa/4944547#4944547
+            IDictionary<string, object> dict = GetAsDictionary<T>(obj);
 
             var row = new List<object>();
 
@@ -52,22 +68,25 @@ namespace GoogleSheets
         public static IEnumerable<IList<object>> ToRows<T>(IEnumerable<T> objects, bool prependHeaders) where T : class
         {
             if (prependHeaders)
-                yield return GetHeaderRow(objects.FirstOrDefault()) as IList<object>;
+                yield return GetHeaderRow(objects.FirstOrDefault()).ToList() as IList<object>;
 
-            foreach (T data in objects)
-                yield return ToRow(data);
+            foreach (T obj in objects)
+                yield return ToRow(obj);
         }
 
-        private static IEnumerable<object> GetHeaderRow<T>(T data)
+        public static IEnumerable<object> GetHeaderRow<T>(T data) where T : class
         {
-            string json = JsonConvert.SerializeObject(data);
+            var jObject = JObject.Parse(JsonConvert.SerializeObject(data));
 
-            dynamic dynamicData = JObject.Parse(json);
+            foreach (dynamic jToken in jObject.Children())
+                yield return jToken.Name;
+        }
 
-            var dict = dynamicData as IDictionary<string, object>;
-
-            foreach (KeyValuePair<string, object> pair in dict)
-                yield return pair.Key;
+        private static IDictionary<string, object> GetAsDictionary<T>(T obj) where T : class
+        {
+            return obj.GetType()
+                .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
+                .ToDictionary(propertyInfo => propertyInfo.Name, propertyInfo => propertyInfo.GetValue(obj, null));
         }
 
         private static void AddProperty(ExpandoObject expandoObject, string propertyName, object propertyValue)

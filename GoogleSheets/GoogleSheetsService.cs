@@ -20,16 +20,7 @@ namespace GoogleSheets
         {
             IList<IList<object>> rows = Spreadsheets.Values.Get(spreadsheetId, range).Execute().Values;
 
-            int index = 0;
-
-            if (columnNames == null)
-            {
-                columnNames = rows[0].Select(x => x.ToString()).ToArray();
-                index = 1;
-            }
-
-            for (; index < rows.Count; index++)
-                yield return RowConverter.FromRow<T>(rows[index], columnNames);
+            return RowConverter.FromRows<T>(rows, columnNames);
         }
 
         public void Update<T>(List<T> data, string spreadsheetId, string range, InputOption inputOption = InputOption.USERENTERED, bool headersIncluedInRange = false) where T : class

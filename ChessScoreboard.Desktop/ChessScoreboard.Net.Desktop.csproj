@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChessScoreboard.Core\ChessScoreboard.Core.csproj" />
+    <ProjectReference Include="..\ChessScoreboard.Core\ChessScoreboard.Net.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
