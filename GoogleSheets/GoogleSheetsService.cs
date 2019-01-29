@@ -47,6 +47,26 @@ namespace GoogleSheets
             await request.ExecuteAsync();
         }
 
+        public void Update(IList<IList<object>> rows, string spreadsheetId, string range, InputOption inputOption = InputOption.USERENTERED)
+        {
+            var requestBody = new ValueRange { Values = rows };
+
+            UpdateRequest request = Spreadsheets.Values.Update(new ValueRange { Values = rows }, spreadsheetId, range);
+            request.ValueInputOption = inputOption;
+
+            request.Execute();
+        }
+
+        public async Task UpdateAsync(IList<IList<object>> rows, string spreadsheetId, string range, InputOption inputOption = InputOption.USERENTERED)
+        {
+            var requestBody = new ValueRange { Values = rows };
+
+            UpdateRequest request = Spreadsheets.Values.Update(new ValueRange { Values = rows }, spreadsheetId, range);
+            request.ValueInputOption = inputOption;
+
+            await request.ExecuteAsync();
+        }
+
         public static GoogleSheetsService New(string credentialsURL, string appName, List<string> scopes = null, string credDataStoreLocation = "token.json")
         {
             if (scopes == null)

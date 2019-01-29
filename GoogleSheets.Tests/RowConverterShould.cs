@@ -9,6 +9,16 @@ namespace GoogleSheets.Tests
     [TestClass]
     public class RowConverterShould
     {
+
+        [TestMethod]
+        public void ThrowExceptionIfNumberOfColumnNamesIsDifferentThanColumnsInRow()
+        {
+            var row = new List<object> { 1, "Dade", "Cook" } as IList<object>;
+            string[] columnNames = new string[] { "Id", "First Name", "Last Name", "Date Of Birth" };
+
+            Assert.ThrowsException<InvalidOperationException>(() => RowConverter.FromRow<Person>(row, columnNames));
+        }
+
         [TestMethod]
         public void CreateObjectFromRow()
         {
@@ -22,15 +32,6 @@ namespace GoogleSheets.Tests
             Assert.AreEqual(1, person.Id);
             Assert.AreEqual("Dade", person.FirstName);
             Assert.AreEqual("Cook", person.LastName);
-        }
-
-        [TestMethod]
-        public void ThrowExceptionIfNumberOfColumnNamesIsDifferentThanColumnsInRow()
-        {
-            var row = new List<object> { 1, "Dade", "Cook" } as IList<object>;
-            string[] columnNames = new string[] { "Id", "First Name", "Last Name", "Date Of Birth" };
-
-            Assert.ThrowsException<InvalidOperationException>(() => RowConverter.FromRow<Person>(row, columnNames));
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace GoogleSheets.Tests
                 new List<object> { 5, "Lee", "Cook" }
             } as IList<IList<object>>;
 
-            people = RowConverter.FromRows<Person>(rows).ToList();
+            people = RowConverter.FromRows<Person>(rows, null).ToList();
             Person person = people[2];
 
             Assert.IsNotNull(people);
@@ -76,6 +77,27 @@ namespace GoogleSheets.Tests
 
             CollectionAssert.AllItemsAreNotNull(people);
             CollectionAssert.AllItemsAreUnique(people);
+        }
+
+        [TestMethod]
+        public void CreateValueTypesFromRows()
+        {
+            var rows = new List<IList<object>>
+            {
+                new List<object> { 220.02 } as IList<object>,
+                new List<object> { 210.08 } as IList<object>,
+                new List<object> { 19.45 } as IList<object>
+            };
+
+            var numbers = RowConverter.FromRows<double>(rows).ToList();
+
+            Assert.IsNotNull(numbers);
+            CollectionAssert.AllItemsAreNotNull(numbers);
+            CollectionAssert.AllItemsAreUnique(numbers);
+
+            Assert.AreEqual(220.02, numbers[0]);
+            Assert.AreEqual(210.08, numbers[1]);
+            Assert.AreEqual(19.45, numbers[2]);
         }
 
         [TestMethod]
@@ -98,6 +120,17 @@ namespace GoogleSheets.Tests
             Assert.AreEqual(1, id);
             Assert.AreEqual("Dade", fName);
             Assert.AreEqual("Cook", lName);
+        }
+
+        [TestMethod]
+        public void CreateRowFromValueType()
+        {
+            double number = 220.02;
+
+            IList<object> row = RowConverter.ToRow(number);
+
+            Assert.IsNotNull(row);
+            Assert.AreEqual(220.02, row[0]);
         }
 
         [TestMethod]
@@ -129,7 +162,7 @@ namespace GoogleSheets.Tests
             CollectionAssert.AllItemsAreNotNull(rows);
             CollectionAssert.AllItemsAreUnique(rows);
 
-            rows = RowConverter.ToRows(people, false).ToList();
+            rows = RowConverter.ToRows(people).ToList();
             row = rows[2];
 
             Assert.IsNotNull(rows);
@@ -141,6 +174,29 @@ namespace GoogleSheets.Tests
 
             CollectionAssert.AllItemsAreNotNull(rows);
             CollectionAssert.AllItemsAreUnique(rows);
+        }
+
+        [TestMethod]
+        public void CreateRowsFromValueTypes()
+        {
+            var numbers = new List<double>
+            {
+                220.02,
+                210.08,
+                19.45
+            };
+
+            var rows = RowConverter.ToRows(numbers, "Headers").ToList();
+            IList<object> row = rows[2];
+
+            Assert.IsNotNull(rows);
+            CollectionAssert.AllItemsAreNotNull(rows);
+            CollectionAssert.AllItemsAreUnique(rows);
+
+            Assert.AreEqual(rows[0][0], "Headers");
+            Assert.AreEqual(rows[1][0], 220.02);
+            Assert.AreEqual(rows[2][0], 210.08);
+            Assert.AreEqual(rows[3][0], 19.45);
         }
     }
 }

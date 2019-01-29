@@ -40,41 +40,65 @@ namespace GoogleSheets
 
         public static IEnumerable<T> FromRows<T>(IList<IList<object>> rows, string[] columnNames = null) where T : class
         {
-            int startingIndex = 0;
-
-            if (columnNames == null)
+            if (typeof(T).IsClass)
             {
-                columnNames = rows[0].Select(x => x.ToString()).ToArray();
-                startingIndex = 1;
-            }
+                int startingIndex = 0;
 
-            for (int index = startingIndex; index < rows.Count; index++)
-                yield return FromRow<T>(rows[index], columnNames);
+                if (columnNames == null)
+                {
+                    columnNames = rows[0].Select(x => x.ToString()).ToArray();
+                    startingIndex = 1;
+                }
+
+                for (int index = startingIndex; index < rows.Count; index++)
+                    yield return FromRow<T>(rows[index], columnNames);
+            }
         }
 
-        public static IList<object> ToRow<T>(T obj) where T : class
+        public static IEnumerable<T> FromRows<T>(IList<IList<object>> rows) where T : struct
         {
-            // Reflection code taken from https://stackoverflow.com/questions/4943817/mapping-object-to-dictionary-and-vice-versa/4944547#4944547
-            IDictionary<string, object> dict = GetAsDictionary<T>(obj);
+            for (int index = 0; index < rows.Count; index++)
+                yield return (T)rows[index][0];
+        }
 
+        public static IList<object> ToRow<T>(T obj)
+        {
             var row = new List<object>();
 
-            foreach (KeyValuePair<string, object> pair in dict)
-                row.Add(pair.Value);
+            if(typeof(T).IsValueType)
+                row.Add(obj);
+
+            if (typeof(T).IsClass)
+            {
+                // Reflection code taken from https://stackoverflow.com/questions/4943817/mapping-object-to-dictionary-and-vice-versa/4944547#4944547
+                IDictionary<string, object> dict = GetAsDictionary<T>(obj);
+
+                foreach (KeyValuePair<string, object> pair in dict)
+                    row.Add(pair.Value);
+            }
 
             return row as IList<object>;
         }
 
-        public static IEnumerable<IList<object>> ToRows<T>(IEnumerable<T> objects, bool prependHeaders) where T : class
+        public static IEnumerable<IList<object>> ToRows<T>(IEnumerable<T> objects, string header) where T : struct
         {
-            if (prependHeaders)
+            if (!string.IsNullOrWhiteSpace(header))
+                yield return new List<object> { header } as IList<object>;
+
+            foreach (T obj in objects)
+                yield return ToRow(obj);
+        }
+
+        public static IEnumerable<IList<object>> ToRows<T>(IEnumerable<T> objects, bool prependHeaders = false)
+        {
+            if (prependHeaders && typeof(T).IsClass)
                 yield return GetHeaderRow(objects.FirstOrDefault()).ToList() as IList<object>;
 
             foreach (T obj in objects)
                 yield return ToRow(obj);
         }
 
-        public static IEnumerable<object> GetHeaderRow<T>(T data) where T : class
+        public static IEnumerable<object> GetHeaderRow<T>(T data)
         {
             var jObject = JObject.Parse(JsonConvert.SerializeObject(data));
 
@@ -82,7 +106,7 @@ namespace GoogleSheets
                 yield return jToken.Name;
         }
 
-        private static IDictionary<string, object> GetAsDictionary<T>(T obj) where T : class
+        private static IDictionary<string, object> GetAsDictionary<T>(T obj)
         {
             return obj.GetType()
                 .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)

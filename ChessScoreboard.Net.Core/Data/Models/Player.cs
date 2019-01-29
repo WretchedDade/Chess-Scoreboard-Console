@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ChessScoreboard.Net.Core.Models
+namespace ChessScoreboard.Net.Core.Data.Models
 {
     public class Player
     {

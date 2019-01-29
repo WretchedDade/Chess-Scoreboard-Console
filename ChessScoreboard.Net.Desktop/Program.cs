@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using ChessScoreboard.Net.Core;
-using ChessScoreboard.Net.Core.Models;
 
 namespace ChessScoreboard.Net.Desktop
 {
