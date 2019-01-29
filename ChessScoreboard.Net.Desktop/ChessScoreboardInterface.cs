@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChessScoreboard.Core;
-using ChessScoreboard.Core.Models;
+using ChessScoreboard.Net.Core;
+using ChessScoreboard.Net.Core.Models;
 
-namespace ChessScoreboard.Desktop
+namespace ChessScoreboard.Net.Desktop
 {
     public partial class ChessScoreboardInterface
     {

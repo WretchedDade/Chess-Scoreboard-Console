@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using ChessScoreboard.Core;
-using ChessScoreboard.Core.Models;
+using ChessScoreboard.Net.Core;
+using ChessScoreboard.Net.Core.Models;
 
-namespace ChessScoreboard.Desktop
+namespace ChessScoreboard.Net.Desktop
 {
     public partial class ChessScoreboardInterface
     {
@@ -113,8 +113,8 @@ namespace ChessScoreboard.Desktop
                 }
             }
 
-            game.Winner = winner;
-            game.Loser = loser;
+            //game.Winner = winner;
+            //game.Loser = loser;
 
             Games.Add(game);
 
@@ -279,15 +279,15 @@ namespace ChessScoreboard.Desktop
             {
                 Players.ForEach(player => player.Rating = Constants.BaseRating);
 
-                (double WinnerUpdatedRating, double LoserUpdatedRating) updatedRatings;
+                //(double WinnerUpdatedRating, double LoserUpdatedRating) updatedRatings;
                 var ratingCalculator = new RatingCalculator(kFactor: 100, baseRating: Constants.BaseRating);
 
                 foreach (Game game in Games)
                 {
-                    updatedRatings = ratingCalculator.GetNewRatings(game.WasAStalemate, game.Winner.Rating, game.Loser.Rating);
+                    //updatedRatings = ratingCalculator.GetNewRatings(game.WasAStalemate, game.Winner.Rating, game.Loser.Rating);
 
-                    Players.First(player => player.Rank == game.Winner.Rank).Rating = updatedRatings.WinnerUpdatedRating;
-                    Players.First(player => player.Rank == game.Loser.Rank).Rating = updatedRatings.LoserUpdatedRating;
+                    //Players.First(player => player.Rank == game.Winner.Rank).Rating = updatedRatings.WinnerUpdatedRating;
+                    //Players.First(player => player.Rank == game.Loser.Rank).Rating = updatedRatings.LoserUpdatedRating;
                 }
             }
             else
@@ -308,10 +308,10 @@ namespace ChessScoreboard.Desktop
 
             foreach (Game game in Games)
             {
-                if (game.WasAStalemate)
-                    ConsoleUtility.WriteLine($"-- Game #{game.Id} was between {game.Winner.FirstName} and {game.Loser.FirstName}. The outcome was a draw!");
-                else
-                    ConsoleUtility.WriteLine($"-- Game #{game.Id} was between {game.Winner.FirstName} and {game.Loser.FirstName}. The outcome was a win for {game.Winner.FirstName}!");
+                //if (game.WasAStalemate)
+                //    ConsoleUtility.WriteLine($"-- Game #{game.Id} was between {game.Winner.FirstName} and {game.Loser.FirstName}. The outcome was a draw!");
+                //else
+                //    ConsoleUtility.WriteLine($"-- Game #{game.Id} was between {game.Winner.FirstName} and {game.Loser.FirstName}. The outcome was a win for {game.Winner.FirstName}!");
             }
 
             ConsoleUtility.WriteHyphenLine();

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChessScoreboard.Core\ChessScoreboard.Net.Core.csproj" />
+    <ProjectReference Include="..\ChessScoreboard.Net.Core\ChessScoreboard.Net.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

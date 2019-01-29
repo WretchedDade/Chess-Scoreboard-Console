@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using ChessScoreboard.Core.Models;
+using ChessScoreboard.Net.Core.Models;
 using GoogleSheets;
 
-namespace ChessScoreboard.Core
+namespace ChessScoreboard.Net.Core
 {
     public class ChessScoreboardData
     {

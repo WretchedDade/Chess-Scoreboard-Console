@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ChessScoreboard.Core.Models
+namespace ChessScoreboard.Net.Core.Models
 {
     public class Game
     {
@@ -15,11 +15,5 @@ namespace ChessScoreboard.Core.Models
 
         [JsonIgnore]
         public int? Id { get; set; }
-
-        [JsonIgnore]
-        public Player Winner { get; set; }
-
-        [JsonIgnore]
-        public Player Loser { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Google.Apis.Sheets.v4;
 
-namespace ChessScoreboard.Core
+namespace ChessScoreboard.Net.Core
 {
     public static class Constants
     {
