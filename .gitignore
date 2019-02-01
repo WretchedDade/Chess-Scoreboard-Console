@@ -336,3 +336,5 @@ ASALocalRun/
 credentials.json
 
 Published App/
+
+coverage.json
